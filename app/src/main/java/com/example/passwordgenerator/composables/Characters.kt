@@ -20,7 +20,7 @@ private const val symbols = "#\$&"
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun Characters(
-    onCheckboxClick: (Boolean, Characters) -> Unit,
+    onCheckboxClick: (Characters, Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     FlowRow(
@@ -32,7 +32,7 @@ fun Characters(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(5.dp)
         ) {
-            CheckBox { onCheckboxClick(it, Characters.UpperCase()) }
+            CheckBox { onCheckboxClick(Characters.UpperCase(), it) }
             Text(text = upperCase, fontSize = 18.sp)
         }
 
@@ -40,7 +40,7 @@ fun Characters(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(3.dp)
         ) {
-            CheckBox { onCheckboxClick(it, Characters.LowerCase()) }
+            CheckBox { onCheckboxClick(Characters.LowerCase(), it) }
             Text(text = lowerCase, fontSize = 18.sp)
         }
 
@@ -48,7 +48,7 @@ fun Characters(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(5.dp)
         ) {
-            CheckBox { onCheckboxClick(it, Characters.Numbers()) }
+            CheckBox { onCheckboxClick(Characters.Numbers(), it) }
             Text(text = numbers, fontSize = 18.sp)
         }
 
@@ -56,7 +56,7 @@ fun Characters(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(5.dp)
         ) {
-            CheckBox { onCheckboxClick(it, Characters.Symbols()) }
+            CheckBox { onCheckboxClick(Characters.Symbols(), it) }
             Text(text = symbols, fontSize = 18.sp)
         }
     }

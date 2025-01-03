@@ -1,5 +1,6 @@
 package com.example.passwordgenerator
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.interaction.Interaction
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.ui.graphics.Color
@@ -26,6 +27,18 @@ sealed interface Characters {
     data class LowerCase(val value: CharRange = ('a'..'z')) : Characters
     data class Numbers(val value: CharRange = ('0'..'9')) : Characters
     data class Symbols(val value: String = "!@#$%^&*()_-+") : Characters
+}
+
+enum class PasswordStrength(
+    val color: Color,
+    val text: String,
+    @DrawableRes val image: Int
+) {
+    VERY_WEAK(veryWeakPasswordColor, "Very Weak", R.drawable.very_week),
+    WEAK(weakPasswordColor, "Weak", R.drawable.week),
+    GOOD(goodPasswordColor, "Good", R.drawable.good),
+    STRONG(strongPasswordColor, "Strong", R.drawable.strong),
+    VERY_STRONG(veryStrongPasswordColor, "Very Strong", R.drawable.very_strong)
 }
 
 fun generatePassword(

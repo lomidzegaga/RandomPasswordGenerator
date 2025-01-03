@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.passwordgenerator.NoRippleInteractionSource
+import com.example.passwordgenerator.PasswordStrength
 import com.example.passwordgenerator.R
 import com.example.passwordgenerator.black
 
@@ -35,13 +36,12 @@ private const val passwordStrengthColor = "password strength color"
 @Composable
 fun PasswordTextField(
     password: String,
-    color: Color,
-    passwordStrengthText: String,
+    passwordStrength: PasswordStrength,
     resetPassword: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val passwordStrengthColor by animateColorAsState(
-        targetValue = color,
+        targetValue = passwordStrength.color,
         animationSpec = tween(),
         label = passwordStrengthColor
     )
@@ -70,7 +70,7 @@ fun PasswordTextField(
                 modifier = Modifier.padding(horizontal = 20.dp)
             ) {
                 Text(
-                    text = passwordStrengthText,
+                    text = passwordStrength.text,
                     modifier = Modifier
                         .background(
                             color = passwordStrengthColor,

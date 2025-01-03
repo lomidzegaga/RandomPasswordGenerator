@@ -1,7 +1,6 @@
 package com.example.passwordgenerator
 
 import android.widget.Toast
-import androidx.annotation.DrawableRes
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
@@ -32,6 +31,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.passwordgenerator.composables.Characters
 import com.example.passwordgenerator.composables.CopyButton
 import com.example.passwordgenerator.composables.PasswordLengthSlider
@@ -44,95 +44,39 @@ private const val charactersUsed = "Characters used:"
 
 @Composable
 fun RandomPasswordGenerator(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: GeneratePasswordVM = hiltViewModel()
 ) {
-    val list = remember {
-        mutableStateListOf<Characters>(
-            Characters.UpperCase(),
-            Characters.LowerCase(),
-            Characters.Numbers(),
-            Characters.Symbols()
-        )
-    }
-    var password by remember { mutableStateOf("") }
-
-    var passwordStrengthColor by remember { mutableStateOf(Color.Green) }
-    var passwordStrengthText by remember { mutableStateOf("") }
-    var passwordStrengthImage by remember { mutableIntStateOf(R.drawable.strong) }
-    var passwordLength by remember { mutableFloatStateOf(12f) }
-
     val clipBoardManager = LocalClipboardManager.current
     val context = LocalContext.current
 
-    LaunchedEffect(passwordLength) {
-        when (password.length) {
-            in 1 until 5 -> {
-                passwordStrengthColor = veryWeakPasswordColor
-                passwordStrengthText = "Very Weak"
-                passwordStrengthImage = R.drawable.very_week
-            }
-
-            in 5 until 8 -> {
-                passwordStrengthColor = weakPasswordColor
-                passwordStrengthText = "Weak"
-                passwordStrengthImage = R.drawable.week
-            }
-
-            8, 9 -> {
-                passwordStrengthColor = goodPasswordColor
-                passwordStrengthText = "Good"
-                passwordStrengthImage = R.drawable.good
-            }
-
-            10, 11 -> {
-                passwordStrengthColor = strongPasswordColor
-                passwordStrengthText = "Strong"
-                passwordStrengthImage = R.drawable.strong
-            }
-
-            else -> {
-                passwordStrengthColor = veryStrongPasswordColor
-                passwordStrengthText = "Very Strong"
-                passwordStrengthImage = R.drawable.very_strong
-            }
-        }
+    viewModel.apply {
+        RandomPasswordGeneratorComposable(
+            password = password,
+            sliderValue = passwordLength,
+            onCopyButtonClick = {
+                clipBoardManager.setText(AnnotatedString(password))
+                Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show()
+            },
+            passwordStrength = ::getPasswordStrength,
+            resetPassword = ::generatePassword,
+            onSliderValueChange = ::updatePasswordLength,
+            onCheckboxClick = ::toggleCharacter,
+            modifier = modifier
+        )
     }
-
-    LaunchedEffect(passwordLength, list.size) {
-        password = generatePassword(list, passwordLength.toInt())
-    }
-
-    RandomPasswordGeneratorComposable(
-        password = password,
-        passwordStrengthText = passwordStrengthText,
-        color = passwordStrengthColor,
-        image = passwordStrengthImage,
-        sliderValue = passwordLength,
-        onCopyButtonClick = {
-            clipBoardManager.setText(AnnotatedString(password))
-            Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show()
-        },
-        resetPassword = { password = generatePassword(list, passwordLength.toInt()) },
-        onSliderValueChange = { passwordLength = it },
-        onCheckboxClick = { isChecked, char ->
-            if (isChecked) list.add(char) else list.remove(char)
-        },
-        modifier = modifier
-    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun RandomPasswordGeneratorComposable(
     password: String,
-    passwordStrengthText: String,
-    color: Color,
-    @DrawableRes image: Int,
     sliderValue: Float,
+    passwordStrength: () -> PasswordStrength,
     onCopyButtonClick: () -> Unit,
     resetPassword: () -> Unit,
     onSliderValueChange: (Float) -> Unit,
-    onCheckboxClick: (Boolean, Characters) -> Unit,
+    onCheckboxClick: (Characters, Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -145,14 +89,13 @@ fun RandomPasswordGeneratorComposable(
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
         Image(
-            painter = painterResource(id = image),
+            painter = painterResource(id = passwordStrength().image),
             contentDescription = passwordStrengthImage
         )
 
         PasswordTextField(
             password = password,
-            passwordStrengthText = passwordStrengthText,
-            color = color,
+            passwordStrength = passwordStrength(),
             resetPassword = resetPassword
         )
 
@@ -287,15 +230,12 @@ fun LineAndCheckmarkAnimation(
 @Composable
 private fun RandomPasswordGeneratorComposablePrev() {
     RandomPasswordGeneratorComposable(
-        image = R.drawable.week,
         password = "",
-        passwordStrengthText = "",
-        color = green,
+        passwordStrength = { PasswordStrength.VERY_WEAK },
         modifier = Modifier.background(Color.White),
         sliderValue = 12f,
         onCopyButtonClick = { },
         resetPassword = { },
         onSliderValueChange = { },
-        onCheckboxClick = { _, _ -> }
-    )
+        onCheckboxClick = { _, _ -> })
 }
