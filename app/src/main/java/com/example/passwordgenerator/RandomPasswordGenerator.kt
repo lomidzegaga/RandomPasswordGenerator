@@ -53,7 +53,7 @@ fun RandomPasswordGenerator(
     viewModel.apply {
         RandomPasswordGeneratorComposable(
             password = password,
-            sliderValue = passwordLength,
+            sliderValue = passwordLength.floatValue,
             onCopyButtonClick = {
                 clipBoardManager.setText(AnnotatedString(password))
                 Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show()

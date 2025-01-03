@@ -13,19 +13,23 @@ class GeneratePasswordVM @Inject constructor() : ViewModel() {
     var password = mutableStateOf("").value
         private set
 
-    var passwordLength = mutableFloatStateOf(12f).floatValue
+    var passwordLength = mutableFloatStateOf(12f)
         private set
 
     val characters = mutableStateListOf<Characters>(
         Characters.UpperCase(), Characters.LowerCase(), Characters.Numbers(), Characters.Symbols()
     )
 
+    init {
+        generatePassword()
+    }
+
     fun generatePassword() {
-        password = generatePassword(characters, passwordLength.toInt())
+        password = generatePassword(characters, passwordLength.floatValue.toInt())
     }
 
     fun updatePasswordLength(length: Float) {
-        passwordLength = length
+        passwordLength.floatValue = length
         generatePassword()
     }
 
