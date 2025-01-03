@@ -13,8 +13,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.passwordgenerator.buttonBlueColor
 import com.example.passwordgenerator.gray
-import com.example.passwordgenerator.green
 
 @Composable
 fun CheckBox(
@@ -27,7 +27,7 @@ fun CheckBox(
         modifier = modifier
             .size(size)
             .background(
-                color = if (checked) green else gray,
+                color = if (checked) buttonBlueColor else gray,
                 shape = RoundedCornerShape(20)
             )
             .clickable {

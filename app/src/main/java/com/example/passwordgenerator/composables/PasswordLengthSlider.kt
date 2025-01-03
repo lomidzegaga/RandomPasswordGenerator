@@ -44,9 +44,7 @@ fun PasswordLengthSlider(
             modifier = Modifier
                 .padding(horizontal = 10.dp)
                 .size(50.dp)
-                .clickable {
-                    if (sliderValue.toInt() > 1) onSliderValueChange(sliderValue - 1f)
-                }
+                .clickable { if (sliderValue.toInt() > 1) onSliderValueChange(sliderValue - 1f) }
         )
 
         Slider(
@@ -86,9 +84,7 @@ fun PasswordLengthSlider(
             modifier = Modifier
                 .padding(horizontal = 10.dp)
                 .size(50.dp)
-                .clickable {
-                    if (sliderValue.toInt() < 50) onSliderValueChange(sliderValue + 1f)
-                }
+                .clickable { if (sliderValue.toInt() < 50) onSliderValueChange(sliderValue + 1f) }
         )
     }
 }

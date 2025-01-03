@@ -1,5 +1,7 @@
 package com.example.passwordgenerator.composables
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -13,6 +15,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,15 +30,22 @@ import com.example.passwordgenerator.R
 import com.example.passwordgenerator.black
 
 private const val iconContentDesc = "generate new password"
+private const val passwordStrengthColor = "password strength color"
 
 @Composable
 fun PasswordTextField(
     password: String,
+    color: Color,
     passwordStrengthText: String,
-    passwordStrengthColor: Color,
     resetPassword: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val passwordStrengthColor by animateColorAsState(
+        targetValue = color,
+        animationSpec = tween(),
+        label = passwordStrengthColor
+    )
+
     OutlinedTextField(
         value = password,
         onValueChange = {},
