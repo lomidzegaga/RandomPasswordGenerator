@@ -52,10 +52,10 @@ fun RandomPasswordGenerator(
 
     viewModel.apply {
         RandomPasswordGeneratorComposable(
-            password = password,
+            password = password.value,
             sliderValue = passwordLength.floatValue,
             onCopyButtonClick = {
-                clipBoardManager.setText(AnnotatedString(password))
+                clipBoardManager.setText(AnnotatedString(password.value))
                 Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show()
             },
             passwordStrength = ::getPasswordStrength,

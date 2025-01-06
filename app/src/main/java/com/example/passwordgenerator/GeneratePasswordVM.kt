@@ -10,7 +10,7 @@ import javax.inject.Inject
 @HiltViewModel
 class GeneratePasswordVM @Inject constructor() : ViewModel() {
 
-    var password = mutableStateOf("").value
+    var password = mutableStateOf("")
         private set
 
     var passwordLength = mutableFloatStateOf(12f)
@@ -25,7 +25,7 @@ class GeneratePasswordVM @Inject constructor() : ViewModel() {
     }
 
     fun generatePassword() {
-        password = generatePassword(characters, passwordLength.floatValue.toInt())
+        password.value = generatePassword(characters, passwordLength.floatValue.toInt())
     }
 
     fun updatePasswordLength(length: Float) {
@@ -38,7 +38,7 @@ class GeneratePasswordVM @Inject constructor() : ViewModel() {
         generatePassword()
     }
 
-    fun getPasswordStrength(): PasswordStrength = when (password.length) {
+    fun getPasswordStrength(): PasswordStrength = when (password.value.length) {
         in 1 until 5 -> PasswordStrength.VERY_WEAK
         in 5 until 8 -> PasswordStrength.WEAK
         8, 9 -> PasswordStrength.GOOD
